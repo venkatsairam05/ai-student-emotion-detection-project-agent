@@ -1,10 +1,13 @@
 <div align="center">
 
-# 🎬 CineMatch AI
+# 🎬 Priya AI
 
 **Your Personal AI Movie & TV Recommendation Assistant**
 
 A production-quality portfolio project combining **Generative AI · NLP · Recommendation Systems · Semantic Search · Vector Databases · Hybrid Ranking · Conversational AI**.
+
+**🔗 Live:** [http://localhost:8501](http://localhost:8501)
+**📦 Repo:** [github.com/venkatsairam05/AI-movie-recommendations-chatbot](https://github.com/venkatsairam05/AI-movie-recommendations-chatbot)
 
 </div>
 
