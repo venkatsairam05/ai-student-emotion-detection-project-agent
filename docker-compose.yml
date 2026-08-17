@@ -1,0 +1,12 @@
+services:
+  cine-match-ai:
+    build: .
+    container_name: cine-match-ai
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./data:/app/data
+    restart: unless-stopped

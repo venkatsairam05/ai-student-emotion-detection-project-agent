@@ -1,0 +1,55 @@
+# Environment / secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Virtual env on Windows
+Scripts/
+Lib/
+Include/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Generated / heavy artifacts
+artifacts/
+data/raw/
+data/processed/
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+*.faiss
+*.npy
+*.bin
+
+# Streamlit
+.streamlit/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+logs/

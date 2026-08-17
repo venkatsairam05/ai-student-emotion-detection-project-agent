@@ -1,0 +1,15 @@
+.git
+.gitignore
+.env
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+.streamlit
+data/raw
+data/processed
+artifacts
+docs
+tests
+scripts
