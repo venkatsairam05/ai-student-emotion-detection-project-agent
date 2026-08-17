@@ -80,7 +80,7 @@ class Settings:
         # (runtime / trailer / backdrop) on first search. Kept small so a
         # single query stays well within TMDB's rate limits.
         self.tmdb_search_enrich_limit: int = int(
-            os.getenv("TMDB_SEARCH_ENRICH_LIMIT", "8")
+            os.getenv("TMDB_SEARCH_ENRICH_LIMIT", "2")
         )
 
         # --- Claude ------------------------------------------------------

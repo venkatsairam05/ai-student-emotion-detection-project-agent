@@ -423,7 +423,7 @@ def _search_cards(query: str, recommender, tmdb) -> tuple[list[dict], bool]:
     """
     query = query.strip()
     if tmdb and getattr(tmdb, "api_key", None):
-        movies, ok = tmdb.search(query, limit=20)
+        movies, ok = tmdb.search(query, limit=20, enrich_limit=0)
         if not ok:
             return [], True
         cards = [components.movie_to_card(movie, tmdb) for movie in movies]
