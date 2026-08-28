@@ -64,7 +64,16 @@ def load_llm() -> LLMService:
 
 @st.cache_resource(show_spinner=False)
 def load_tmdb() -> TMDBClient:
-    return TMDBClient()
+    client = TMDBClient()
+    # Warm the genre id -> name maps so the first search doesn't pay the two
+    # genre-list API round-trips (best-effort; safely ignored on failure).
+    if client.api_key:
+        for media in ("movie", "tv"):
+            try:
+                client._load_genres(media)
+            except Exception:  # pragma: no cover - defensive
+                pass
+    return client
 
 
 @st.cache_resource(show_spinner=False)

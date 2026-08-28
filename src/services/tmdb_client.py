@@ -273,7 +273,8 @@ class TMDBClient:
             return cached
         payload = self.movie_genres() if media_type == "movie" else self.tv_genres()
         mapping: dict[int, str] = {}
-        for genre in (payload or {}).get("genres") or []:
+        genres = payload.get("genres") if isinstance(payload, dict) else None
+        for genre in genres or []:
             try:
                 mapping[int(genre["id"])] = genre["name"]
             except (KeyError, TypeError, ValueError):
@@ -326,22 +327,27 @@ class TMDBClient:
         if not persons:
             person_payload = self.search_person(query)
             persons = (person_payload or {}).get("results") or []
-        persons = sorted(persons, key=lambda p: p.get("popularity") or 0, reverse=True)
-        for person in persons[:1]:
-            credits = self.person_combined_credits(person.get("id")) or {}
-            entries = sorted(
-                (credits.get("cast") or []) + (credits.get("crew") or []),
-                key=lambda c: c.get("popularity") or 0,
-                reverse=True,
-            )
-            for item in entries:
-                media_type = item.get("media_type")
-                if media_type in ("movie", "tv"):
-                    movie = self._movie_from_tmdb(item, media_type)
-                    key = (media_type, movie.tmdb_id)
-                    if key not in seen:
-                        seen.add(key)
-                        movies.append(movie)
+        # Only expand a person's credits when the query is clearly person-like
+        # (i.e. we found few or no movie/TV results). For plain title queries
+        # like "Inception" the movie/TV results already fill the card grid, so
+        # skipping the expensive person-credits call keeps search fast.
+        if persons and len(movies) < limit:
+            persons = sorted(persons, key=lambda p: p.get("popularity") or 0, reverse=True)
+            for person in persons[:1]:
+                credits = self.person_combined_credits(person.get("id")) or {}
+                entries = sorted(
+                    (credits.get("cast") or []) + (credits.get("crew") or []),
+                    key=lambda c: c.get("popularity") or 0,
+                    reverse=True,
+                )
+                for item in entries:
+                    media_type = item.get("media_type")
+                    if media_type in ("movie", "tv"):
+                        movie = self._movie_from_tmdb(item, media_type)
+                        key = (media_type, movie.tmdb_id)
+                        if key not in seen:
+                            seen.add(key)
+                            movies.append(movie)
 
         movies.sort(key=lambda m: m.popularity, reverse=True)
         return movies[:limit], True
