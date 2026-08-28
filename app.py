@@ -54,7 +54,17 @@ _VOICE_OPTIONS = {
 # --------------------------------------------------------------------- #
 @st.cache_resource(show_spinner=False)
 def load_recommender() -> Recommender:
-    return Recommender()
+    rec = Recommender()
+    # Warm the sentence-transformer model at startup so the first chat
+    # recommendation doesn't pay the (large) model-download/load cost. The
+    # module-level cache makes all later calls instant.
+    try:
+        from src.recommender import embeddings
+
+        embeddings.load_model()
+    except Exception:  # pragma: no cover - defensive
+        pass
+    return rec
 
 
 @st.cache_resource(show_spinner=False)
