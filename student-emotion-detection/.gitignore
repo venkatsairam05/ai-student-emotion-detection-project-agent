@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Data and generated artifacts
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+artifacts/models/*.pt
+artifacts/models/*.json
+artifacts/annotated/
+artifacts/training_history.json
+reports/*.csv
+reports/*.json
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
