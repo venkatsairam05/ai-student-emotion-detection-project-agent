@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="A preview of EduSense, a student emotion detection dashboard for smart classrooms.">
+  <title>EduSense · Classroom insights</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b1020;
+      color: #e8ecf8;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      --muted: #9ca9c4;
+      --line: rgba(164, 178, 211, .14);
+      --surface: rgba(19, 28, 53, .82);
+      --mint: #34e5a2;
+      --cyan: #38bdf8;
+      --violet: #a78bfa;
+      --amber: #fbbf24;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(950px 540px at 4% -10%, rgba(124, 58, 237, .21), transparent 65%),
+        radial-gradient(780px 500px at 96% 0%, rgba(34, 211, 238, .12), transparent 64%),
+        #0b1020;
+    }
+    button { font: inherit; }
+    .shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+    aside {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      padding: 26px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(10, 15, 31, .62);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 2px 8px; }
+    .brand-mark {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      border: 1px solid rgba(52, 229, 162, .35);
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(52, 229, 162, .18), rgba(56, 189, 248, .12));
+      font-size: 20px;
+    }
+    .brand-name { font-weight: 750; letter-spacing: -.03em; }
+    .brand-sub { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .nav-label, .eyebrow { color: #7f8ba8; font-size: 10px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
+    .nav-label { padding: 0 10px; }
+    nav { display: grid; gap: 6px; }
+    .nav-button {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      background: transparent;
+      color: #aeb9d0;
+      text-align: left;
+      cursor: pointer;
+    }
+    .nav-button:hover { background: rgba(255, 255, 255, .045); color: #fff; }
+    .nav-button[aria-current="page"] {
+      border-color: rgba(52, 229, 162, .16);
+      background: rgba(52, 229, 162, .09);
+      color: #eafff6;
+    }
+    .nav-icon { width: 20px; text-align: center; }
+    .aside-note {
+      margin-top: auto;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(255, 255, 255, .025);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .aside-note strong { display: block; margin-bottom: 5px; color: #e8ecf8; }
+    main { width: min(1180px, 100%); margin: 0 auto; padding: 34px clamp(20px, 4vw, 54px) 52px; }
+    .topline { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 34px; }
+    .topline-label { color: var(--muted); font-size: 13px; }
+    .preview-chip, .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border: 1px solid rgba(251, 191, 36, .27);
+      border-radius: 99px;
+      background: rgba(251, 191, 36, .075);
+      color: #ffdf8a;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
+    h1 { margin: 8px 0 10px; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.045em; line-height: 1.08; }
+    h2 { margin: 0; font-size: 17px; letter-spacing: -.025em; }
+    h3 { margin: 0; font-size: 13px; }
+    p { color: var(--muted); line-height: 1.65; }
+    .intro { max-width: 720px; margin: 0 0 25px; font-size: 14px; }
+    .notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 22px 0;
+      padding: 14px 16px;
+      border: 1px solid rgba(251, 191, 36, .2);
+      border-radius: 13px;
+      background: rgba(251, 191, 36, .055);
+      color: #e9d8a4;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .notice strong { color: #ffe7a6; }
+    .metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 20px 0; }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, .14);
+    }
+    .metric { padding: 18px; }
+    .metric-label { color: var(--muted); font-size: 12px; }
+    .metric-value { margin: 13px 0 5px; font-size: 29px; font-weight: 750; letter-spacing: -.05em; }
+    .metric-foot { color: #8f9cb8; font-size: 11px; }
+    .metric-value.mint { color: var(--mint); }
+    .metric-value.cyan { color: var(--cyan); }
+    .metric-value.violet { color: #c4b5fd; }
+    .content-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, .85fr); gap: 14px; }
+    .panel { padding: 20px; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .sample-tag { color: #8f9cb8; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .chart { display: block; width: 100%; height: auto; overflow: visible; }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px 15px; margin-top: 13px; color: var(--muted); font-size: 11px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend i { width: 7px; height: 7px; border-radius: 50%; }
+    .emotion-list { display: grid; gap: 15px; }
+    .emotion-row { display: grid; grid-template-columns: 90px 1fr 34px; align-items: center; gap: 9px; color: #c5cee0; font-size: 11px; }
+    .track { height: 7px; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, .08); }
+    .fill { height: 100%; border-radius: inherit; }
+    .emotion-row b { color: #dce4f4; font-size: 11px; text-align: right; }
+    .section { margin-top: 14px; }
+    .live-card {
+      display: grid;
+      min-height: 300px;
+      place-items: center;
+      padding: 28px;
+      border: 1px dashed rgba(164, 178, 211, .24);
+      border-radius: 14px;
+      background:
+        radial-gradient(ellipse at 50% 45%, rgba(56, 189, 248, .09), transparent 55%),
+        rgba(5, 9, 20, .35);
+      text-align: center;
+    }
+    .camera-icon { display: grid; width: 60px; height: 60px; margin: 0 auto 15px; place-items: center; border: 1px solid var(--line); border-radius: 19px; background: rgba(255,255,255,.04); font-size: 26px; }
+    .live-card p { max-width: 430px; margin: 9px auto 0; font-size: 13px; }
+    .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
+    .step { padding: 20px; }
+    .step-number { display: grid; width: 31px; height: 31px; margin-bottom: 18px; place-items: center; border: 1px solid rgba(56, 189, 248, .24); border-radius: 10px; background: rgba(56, 189, 248, .08); color: #7dd3fc; font-size: 12px; font-weight: 750; }
+    .step p { margin-bottom: 0; font-size: 12px; }
+    .source-link { display: inline-flex; margin-top: 22px; color: #7dd3fc; font-size: 12px; text-decoration: none; }
+    .source-link:hover { text-decoration: underline; }
+    [hidden] { display: none !important; }
+    footer { margin-top: 30px; color: #74809b; font-size: 11px; }
+    @media (max-width: 780px) {
+      .shell { grid-template-columns: 1fr; }
+      aside { gap: 15px; padding: 15px 18px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .brand { padding: 0 4px; }
+      .nav-label, .aside-note { display: none; }
+      nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .nav-button { justify-content: center; padding: 10px 7px; font-size: 11px; }
+      .nav-icon { width: auto; }
+      main { padding-top: 24px; }
+    }
+    @media (max-width: 580px) {
+      .metrics { grid-template-columns: 1fr; gap: 9px; }
+      .metric { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 14px 16px; }
+      .metric-label { grid-column: 1; }
+      .metric-value { grid-column: 2; grid-row: 1 / span 2; margin: 0; font-size: 24px; }
+      .metric-foot { grid-column: 1; }
+      .content-grid, .steps { grid-template-columns: 1fr; }
+      .topline { align-items: flex-start; flex-direction: column; margin-bottom: 26px; }
+      .emotion-row { grid-template-columns: 78px 1fr 30px; }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .card { animation: appear .45s ease both; }
+      @keyframes appear { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">🎓</div>
+        <div><span class="brand-name">EduSense</span><span class="brand-sub">Classroom insights</span></div>
+      </div>
+      <div class="nav-label">Workspace</div>
+      <nav aria-label="Main navigation">
+        <button class="nav-button" type="button" data-view="overview" aria-current="page"><span class="nav-icon" aria-hidden="true">◫</span>Overview</button>
+        <button class="nav-button" type="button" data-view="classroom"><span class="nav-icon" aria-hidden="true">◎</span>Live classroom</button>
+        <button class="nav-button" type="button" data-view="method"><span class="nav-icon" aria-hidden="true">⌘</span>How it works</button>
+      </nav>
+      <div class="aside-note"><strong>Privacy by design</strong>The full local app is designed to analyse frames on your device. This hosted preview does not access a camera or process faces.</div>
+    </aside>
+    <main>
+      <div class="topline">
+        <span class="topline-label">Smart classroom · Project preview</span>
+        <span class="preview-chip"><span class="dot" aria-hidden="true"></span>Static demo · sample data</span>
+      </div>
+
+      <section id="view-overview" aria-labelledby="page-title">
+        <div class="eyebrow">Classroom overview</div>
+        <h1 id="page-title">A clearer picture of the room.</h1>
+        <p class="intro">EduSense is a student emotion detection project exploring how facial-expression signals can be summarized into classroom-level engagement insights.</p>
+        <div class="notice" role="note"><span aria-hidden="true">ⓘ</span><span><strong>Illustrative preview only.</strong> The figures below are sample values for showing the dashboard layout; they are not live predictions or results from a trained model.</span></div>
+        <div class="metrics" aria-label="Illustrative sample metrics">
+          <article class="card metric"><span class="metric-label">Sample engagement</span><span class="metric-value mint">72%</span><span class="metric-foot">Example value · Moderate</span></article>
+          <article class="card metric"><span class="metric-label">Example faces</span><span class="metric-value cyan">18</span><span class="metric-foot">Placeholder count only</span></article>
+          <article class="card metric"><span class="metric-label">Example leading label</span><span class="metric-value violet">Neutral</span><span class="metric-foot">Illustrative distribution</span></article>
+        </div>
+        <div class="content-grid">
+          <article class="card panel">
+            <div class="panel-head"><h2>Engagement through a sample session</h2><span class="sample-tag">Illustration</span></div>
+            <svg class="chart" viewBox="0 0 620 205" role="img" aria-label="Illustrative engagement line chart, not measured data">
+              <defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#34e5a2" stop-opacity=".25"/><stop offset="1" stop-color="#34e5a2" stop-opacity="0"/></linearGradient></defs>
+              <g stroke="rgba(164,178,211,.14)" stroke-width="1"><path d="M42 28H604"/><path d="M42 68H604"/><path d="M42 108H604"/><path d="M42 148H604"/></g>
+              <g fill="#8190ad" font-size="10" font-family="system-ui,sans-serif"><text x="8" y="32">100%</text><text x="15" y="72">75%</text><text x="15" y="112">50%</text><text x="15" y="152">25%</text><text x="42" y="184">09:00</text><text x="180" y="184">09:15</text><text x="320" y="184">09:30</text><text x="460" y="184">09:45</text><text x="566" y="184">10:00</text></g>
+              <path d="M42 98 C82 82 102 87 130 89 S178 111 216 87 S270 70 304 78 S350 115 389 94 S442 64 477 77 S528 93 559 72 S589 75 604 67 L604 158 L42 158Z" fill="url(#area)"/>
+              <path d="M42 98 C82 82 102 87 130 89 S178 111 216 87 S270 70 304 78 S350 115 389 94 S442 64 477 77 S528 93 559 72 S589 75 604 67" fill="none" stroke="#34e5a2" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="604" cy="67" r="4" fill="#34e5a2" stroke="#0b1020" stroke-width="2"/>
+            </svg>
+            <div class="legend"><span><i style="background:#34e5a2"></i>Example engagement signal</span></div>
+          </article>
+          <article class="card panel">
+            <div class="panel-head"><h2>Sample emotion mix</h2><span class="sample-tag">Illustration</span></div>
+            <div class="emotion-list" aria-label="Illustrative emotion distribution">
+              <div class="emotion-row"><span>😐 Neutral</span><div class="track"><div class="fill" style="width:38%;background:#94a3b8"></div></div><b>38%</b></div>
+              <div class="emotion-row"><span>😊 Happy</span><div class="track"><div class="fill" style="width:29%;background:#34e5a2"></div></div><b>29%</b></div>
+              <div class="emotion-row"><span>😮 Surprise</span><div class="track"><div class="fill" style="width:12%;background:#ffb020"></div></div><b>12%</b></div>
+              <div class="emotion-row"><span>😢 Sad</span><div class="track"><div class="fill" style="width:9%;background:#38bdf8"></div></div><b>9%</b></div>
+              <div class="emotion-row"><span>😨 Fear</span><div class="track"><div class="fill" style="width:6%;background:#4f7dff"></div></div><b>6%</b></div>
+              <div class="emotion-row"><span>Other</span><div class="track"><div class="fill" style="width:6%;background:#b06bff"></div></div><b>6%</b></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="view-classroom" aria-labelledby="classroom-title" hidden>
+        <div class="eyebrow">Live classroom</div>
+        <h1 id="classroom-title">Camera analysis runs locally.</h1>
+        <p class="intro">The full application captures frames in your browser and sends them to a local camera bridge for on-device inference.</p>
+        <div class="notice" role="note"><span aria-hidden="true">ⓘ</span><span><strong>Not available in this hosted preview.</strong> This page does not request camera permission, receive images, or generate predictions.</span></div>
+        <article class="card live-card">
+          <div><div class="camera-icon" aria-hidden="true">📷</div><h2>Live camera is disabled</h2><p>This Vercel deployment is a static project preview. Run the full Streamlit application on your own machine to use camera, image, or video analysis.</p></div>
+        </article>
+      </section>
+
+      <section id="view-method" aria-labelledby="method-title" hidden>
+        <div class="eyebrow">Project notes</div>
+        <h1 id="method-title">How the full project works.</h1>
+        <p class="intro">A compact CNN classifies facial expressions, then the application summarizes its frame-level outputs as engagement indicators.</p>
+        <div class="notice" role="note"><span aria-hidden="true">ⓘ</span><span><strong>Important limitation.</strong> Emotion labels are uncertain estimates from facial expressions and should not be treated as a measure of a student's attention, understanding, or wellbeing.</span></div>
+        <div class="steps">
+          <article class="card step"><div class="step-number">01</div><h2>Capture</h2><p>The full local app accepts a camera frame, image, or video for analysis.</p></article>
+          <article class="card step"><div class="step-number">02</div><h2>Classify</h2><p>A trained CNN predicts one of seven expression categories with confidence scores.</p></article>
+          <article class="card step"><div class="step-number">03</div><h2>Summarize</h2><p>Frame-level outputs feed session charts and classroom-level engagement summaries.</p></article>
+        </div>
+        <a class="source-link" href="https://github.com/venkatsairam05/ai-student-emotion-detection-project-agent/tree/main/student-emotion-detection" target="_blank" rel="noreferrer">View the project source on GitHub ↗</a>
+      </section>
+
+      <footer>EduSense · Static project preview · No camera access or live inference</footer>
+    </main>
+  </div>
+  <script>
+    const buttons = document.querySelectorAll(".nav-button");
+    const views = document.querySelectorAll("main > section");
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const selected = button.dataset.view;
+        buttons.forEach((item) => item.removeAttribute("aria-current"));
+        button.setAttribute("aria-current", "page");
+        views.forEach((view) => { view.hidden = view.id !== `view-${selected}`; });
+      });
+    });
+  </script>
+</body>
+</html>
