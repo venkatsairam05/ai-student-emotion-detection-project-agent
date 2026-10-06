@@ -90,7 +90,23 @@
     .aside-note strong { display: block; margin-bottom: 5px; color: #e8ecf8; }
     main { width: min(1180px, 100%); margin: 0 auto; padding: 34px clamp(20px, 4vw, 54px) 52px; }
     .topline { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 34px; }
+    .topline-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
     .topline-label { color: var(--muted); font-size: 13px; }
+    .local-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 11px;
+      border: 1px solid rgba(52, 229, 162, .28);
+      border-radius: 99px;
+      background: rgba(52, 229, 162, .08);
+      color: #b9f8df;
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .local-link:hover { background: rgba(52, 229, 162, .15); color: #fff; }
     .preview-chip, .status-chip {
       display: inline-flex;
       align-items: center;
@@ -218,7 +234,10 @@
     <main>
       <div class="topline">
         <span class="topline-label">Smart classroom · Project preview</span>
-        <span class="preview-chip"><span class="dot" aria-hidden="true"></span>Static demo · sample data</span>
+        <div class="topline-actions">
+          <a class="local-link" href="http://localhost:8501" title="Opens the Streamlit app on this device when it is running">Open local app · localhost:8501 ↗</a>
+          <span class="preview-chip"><span class="dot" aria-hidden="true"></span>Static demo · sample data</span>
+        </div>
       </div>
 
       <section id="view-overview" aria-labelledby="page-title">
